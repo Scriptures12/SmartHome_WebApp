@@ -1,6 +1,10 @@
 import User from '../models/userModel.js';
 import bcryptjs from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
+
+
+//SignUp funtionlality
 export const signup = async (req, res, next) => {
   const { username, email, password } = req.body;
   
@@ -26,5 +30,49 @@ export const signup = async (req, res, next) => {
       res.status(500).json({ message: "Internal Server Error" });
       console.error(error);
     }
+  }
+};
+
+
+//signIn funtionlality
+export const signin = async (req, res, next) => {
+  const { email, password } = req.body;
+  
+  // Basic server-side validation
+  if (!email || !password) {
+    return res.status(400).json({ message: "Email and password are required" });
+  }
+
+  try {
+    // Check if the user exists
+    const validUser = await User.findOne({ email });
+    if (!validUser) {
+      return res.status(400).json({ message: "Invalid email or password" });
+    }
+
+    // Verify the password
+    const isPasswordValid = bcryptjs.compareSync(password, validUser.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: "Wrong Credentials" });
+    }
+    
+    // Generating token
+    const token = jwt.sign(
+      { userId: validUser._id, email: validUser.email },
+      process.env.JWT_SECRET, 
+      { expiresIn: '1h' } // Token expires in 1 hour
+    );
+
+    // Send token as HTTP-only cookie
+    res.cookie('access-token', token, { httpOnly: true });
+
+    // Remove password from user object before sending
+    const { password: hashedPassword, ...userWithoutPassword } = validUser._doc;
+
+    // Successful login
+    res.status(200).json({ message: "Login successful", token, user: userWithoutPassword });
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error" });
+    console.error(error);
   }
 };
