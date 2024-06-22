@@ -3,7 +3,6 @@ import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 
-
 //SignUp funtionlality
 export const signup = async (req, res, next) => {
   const { username, email, password } = req.body;
@@ -33,21 +32,23 @@ export const signup = async (req, res, next) => {
   }
 };
 
-
 //signIn funtionlality
 export const signin = async (req, res, next) => {
-  const { email, password } = req.body;
+  const { identifier, password } = req.body;
   
   // Basic server-side validation
-  if (!email || !password) {
-    return res.status(400).json({ message: "Email and password are required" });
+  if (!identifier || !password) {
+    return res.status(400).json({ message: "Username or email and password are required" });
   }
 
   try {
-    // Check if the user exists
-    const validUser = await User.findOne({ email });
+    // Check if the user exists (by email or username)
+    const validUser = await User.findOne({
+      $or: [{ email: identifier }, { username: identifier }]
+    });
+
     if (!validUser) {
-      return res.status(400).json({ message: "Invalid email or password" });
+      return res.status(400).json({ message: "Invalid username or email and password" });
     }
 
     // Verify the password
