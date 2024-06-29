@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import ClipLoader from 'react-spinners/ClipLoader';
 import axios from "axios";
+import OAuth from "../components/OAuth";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -99,6 +100,7 @@ const SignUp = () => {
     >
       {loading ? <ClipLoader color="#fff" size={24} /> : "Sign Up"}
     </button>
+    <OAuth />
   </form>
   <div className="flex gap-2 my-3 justify-center items-center">
     <p>Have an account?</p>

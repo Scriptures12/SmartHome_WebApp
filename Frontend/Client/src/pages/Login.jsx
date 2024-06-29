@@ -2,52 +2,55 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import ClipLoader from 'react-spinners/ClipLoader';
 import axios from "axios";
+import {
+  signInStart,
+  signInSuccess,
+  signInFailure,
+} from '../redux/user/userSlice.js';
+import { useDispatch, useSelector } from 'react-redux';
+import OAuth from '../components/OAuth';
 
 const Login = () => {
 
   let text = "Don't have an account?";
   const [formData, setFormData] = useState({
-    identifier: "", // Can be either email or username
+    identifier: "",// email or username
     password: "",
   });
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const { loading = false, error = null } = useSelector((state) => state.user) || {}; // Add null check
 
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-
+    dispatch(signInStart());
     // Basic client-side validation
     if (!formData.identifier || !formData.password) {
-      setError("Username or email and password are required");
+      dispatch(signInFailure({ message: "Username or email and password are required" }));
       return;
     }
 
-    setLoading(true); // Start loading
-
     try {
-      // connecting frontend to backend
       const res = await axios.post(`http://localhost:5000/auth/signin`, formData);
-      console.log('Server response:', res.data.message);
+      dispatch(signInSuccess(res.data.user));
       alert("Login Successful");
-      setLoading(false); // Stop loading
-
-      // Redirect or perform actions after successful login
-      navigate('/')
+      navigate('/');
     } catch (err) {
-      setLoading(false); // Stop loading
+      let errorMessage = "An error occurred. Please try again.";
       if (err.response) {
-        setError(err.response.data.message || "An error occurred");
+        if (err.response.status === 401) {
+          errorMessage = "Wrong credentials. Please try again.";
+        } else {
+          errorMessage = err.response.data.message || "An error occurred";
+        }
       } else if (err.request) {
-        setError("No response from server. Please try again later.");
-      } else {
-        setError("An error occurred. Please try again.");
+        errorMessage = "No response from server. Please try again later.";
       }
+      dispatch(signInFailure({ message: errorMessage }));
     }
   };
 
@@ -80,6 +83,7 @@ const Login = () => {
     >
       {loading ? <ClipLoader color="#fff" size={24} /> : "Sign In"}
     </button>
+    <OAuth />
   </form>
   <div className="flex gap-2 my-3 justify-center items-center">
     <p>{text}</p>

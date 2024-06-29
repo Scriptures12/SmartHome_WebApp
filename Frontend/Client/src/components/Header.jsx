@@ -16,7 +16,6 @@ const Header = () => {
       <ul className='hidden md:flex text-white font-semibold'>
         <li className='p-4'><Link to="/">Home</Link></li>
         <li className='p-4'><Link to="/about">About</Link></li>
-        <li className='p-4'><Link to="/contact">Contact</Link></li>
         <li className='p-4'><Link to="/Sign-up">SignUp</Link></li>
         <li className='p-4'><Link to="/Sign-in">Login</Link></li>
       </ul>
@@ -32,7 +31,6 @@ const Header = () => {
         <ul className='font-bold pt-4 text-white'>
           <li className='p-4 border-b border-gray-600'><Link to="/" onClick={handleNav}>Home</Link></li>
           <li className='p-4 border-b border-gray-600'><Link to="/about" onClick={handleNav}>About</Link></li>
-          <li className='p-4 border-b border-gray-600'><Link to="/contact" onClick={handleNav}>Contact</Link></li>
           <li className='p-4 border-b border-gray-600'><Link to="/Sign-up" onClick={handleNav}>Sign Up</Link></li>
           <li className='p-4'><Link to="/Sign-in" onClick={handleNav}>SignIn</Link></li>
         </ul>
