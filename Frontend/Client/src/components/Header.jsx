@@ -16,7 +16,7 @@ const Header = () => {
       <h1 className="w-full text-3xl font-bold text-[#00df9a]">CONTROLWERL</h1>
       <ul className="hidden md:flex text-white font-semibold">
         {navRoutes.map(({ name, route }) => (
-          <li className="p-4">
+          <li key={`${route}-${name}`} className="p-4">
             <Link to={route}>{name}</Link>
           </li>
         ))}
@@ -41,6 +41,7 @@ const Header = () => {
         <ul className="font-bold pt-4 text-white">
           {navRoutes.map(({ name, route }) => (
             <li
+              key={`${route}-${name}`}
               className={`p-4 ${
                 route === "/Sign-in" ? "" : "border-b border-gray-600"
               }`}
