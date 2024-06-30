@@ -1,4 +1,4 @@
-import {BrowserRouter, Routes, Route} from 'react-router-dom';
+import {Routes, Route} from 'react-router-dom';
 import HomePage from './pages/HomePage.jsx';
 import About from './pages/About.jsx';
 import Login from './pages/Login.jsx';
@@ -9,17 +9,17 @@ import Header from './components/Header.jsx';
 
 const App = () => {
   return (
-    <BrowserRouter>
-    <Header/>
-     <Routes>
-       <Route path='/' element={<HomePage />}></Route>
-       <Route path='/about' element={<About />}></Route>
-       <Route path='/Sign-in' element={<Login />}></Route>
-       <Route path='/Sign-up' element={<SignUp />}></Route>
-       <Route path='/Profile' element={<Profile />}></Route>
+    <>
+      <Header />
+      <Routes>
+        <Route path="/" element={<HomePage />}></Route>
+        <Route path="/about" element={<About />}></Route>
+        <Route path="/Sign-in" element={<Login />}></Route>
+        <Route path="/Sign-up" element={<SignUp />}></Route>
+        <Route path="/Profile" element={<Profile />}></Route>
       </Routes>
-    </BrowserRouter>
-  )
+    </>
+  );
 }
 
 export default App
