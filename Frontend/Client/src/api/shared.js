@@ -35,7 +35,7 @@ export async function callApi(
   config
 ) {
   try {
-    const response = await axiosInstance<_IApiResponse<T>>({
+    const response = await axiosInstance({
       url: config.url,
       method: config.method,
       data: config.data,
