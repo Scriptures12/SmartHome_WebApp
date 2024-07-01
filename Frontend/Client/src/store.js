@@ -12,6 +12,8 @@ import {
   REGISTER,
 } from "redux-persist";
 import storage from 'redux-persist/lib/storage';
+import { authInitialState } from './redux/states.js';
+import authSlice from './redux/auth.slice.js';
 
 const persistConfig = {
   key: 'root',
@@ -24,11 +26,13 @@ const preLoadedState = {
   currentUser: null,
   loading: false,
   error: false,
-  }
+  },
+  auth: authInitialState
 }
 
 const appReducer = combineReducers({ 
-  user: userReducer 
+  user: userReducer,
+  auth: authSlice
 });
 
 //Added AppReducer to aid in clearing persisted data
